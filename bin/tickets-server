@@ -30,75 +30,7 @@ $LOAD_PATH.unshift(File.expand_path("../", File.dirname(__FILE__)))
 require 'model/ticket'
 
 # controllers
-class MainController < Ramaze::Controller
-  map '/'
-  engine :Etanni
-
-  def index
-    Ticket.shake! if Ticket.needs_shaking?
-  end
-
-  def track
-    @tickets = Ticket.filter(:deleted => true).reverse_order(:id)
-  end
-end
-
-class ConfigController < Ramaze::Controller
-  map '/config'
-
-  def board_size
-    "(xy . (#{Tickets::Config::BOARD_WIDTH} . #{Tickets::Config::BOARD_HEIGHT}))"
-  end
-end
-
-class TicketsController < Ramaze::Controller
-  map '/tickets'
-
-  def create
-    ticket = Ticket.new
-    ticket.save
-
-    "(id . #{ticket.id})"
-  end
-
-  def list
-    tickets = Ticket.filter(:deleted => false).all
-
-    '(' +
-    tickets.map{|ticket|
-      "(#{ticket.id} #{ticket.title.inspect} #{ticket.emergency} #{ticket.importance})"
-    }.join(' ') +
-    ')'
-  end
-
-  def move
-    raise "must be via POST" unless request.post?
-    ticket = Ticket.find(:id => request["id"])
-    raise "ticket not found" unless ticket
-
-    ticket.update(:emergency => request["x"],
-                  :importance => request["y"])
-    "#t"
-  end
-
-  def rename
-    raise "must be via POST" unless request.post?
-    ticket = Ticket.find(:id => request["id"])
-    raise "ticket not found" unless ticket
-
-    ticket.update(:title => request["title"])
-    "#t"
-  end
-
-  def delete
-    raise "must be via POST" unless request.post?
-    ticket = Ticket.find(:id => request["id"])
-    raise "ticket not found" unless ticket
-
-    ticket.update(:deleted => true)
-    "#t"
-  end
-end
+require 'controller/init.rb'
 
 Dir.chdir(File.expand_path("..", File.dirname(__FILE__)))
 Ramaze.start :port => Tickets::Config::PORT,
