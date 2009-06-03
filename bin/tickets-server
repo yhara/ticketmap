@@ -51,7 +51,7 @@ class ConfigController < Ramaze::Controller
   end
 end
 
-class TicktesController < Ramaze::Controller
+class TicketsController < Ramaze::Controller
   map '/tickets'
 
   def create
