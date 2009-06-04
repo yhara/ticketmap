@@ -29,7 +29,7 @@ class Ticket
   end
 
   def self.shake!
-    Ticket.each do |ticket|
+    Ticket.all.each do |ticket|
       pos = ticket.emergency
       dir = (ticket.importance < 0 ? 1 : -1)
       newpos = pos + TicketMap.options[:shake_distance] * dir
@@ -37,10 +37,12 @@ class Ticket
         newpos = (TicketMap.options[:board_width] / 2)
       end
 
-      ticket.update(:emergency => newpos) if newpos != pos
+      ticket.emergency = newpos if newpos != pos
       if newpos < -(TicketMap.options[:board_width] / 2)
-        ticket.update(:deleted => true, :timeouted => true)
+        ticket.deleted = true
+        ticket.timeouted = true
       end
+      ticket.save
     end
     @@last_shook = Time.now
   end
