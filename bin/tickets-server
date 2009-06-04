@@ -1,37 +1,68 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'ramaze'
-require 'ramaze/setup'
+require 'controller/init.rb'
 
-module Tickets
+module TicketMap
+  include Innate::Optioned
   VERSION = "0.1.0.3rc"
-end
 
-# load config
-conf_path = File.expand_path("~/.tickets.conf")
-load conf_path if File.exist?(conf_path)
+  options.dsl do
+    o "Path of config file", 
+      :config, File.expand_path("~/.ticketmap.rb") 
+    o "Path of database file",
+      :db, File.expand_path("~/.ticketmap.db")
+    o "Port number", 
+      :port, 7007
+    o "Interval to automatically move tickets (hours)",
+      :shake_interval, 24
+    o "Distance to automatically move tickets (pixels)",
+      :shake_distance, 8
+    o "Width of the board (pixels)",
+      :board_width, 600
+    o "Height of the board (pixels)",
+      :board_height, 600
+  end
 
-# update config
-module Tickets
-  module Config
-    DB_PATH = File.expand_path("~/.tickets.db") unless defined?(DB_PATH)
-    PORT = 7007 unless defined?(PORT)
+  def self.parse_argv!
+    OptionParser.new{|o|
+      o.on("--config PATH"){|path|
+        TicketMap.options[:config] = path
+      }
+      o.on("--db DB_PATH"){|path| 
+        TicketMap.options[:db] = File.expand_path(path, Dir.pwd)
+      }
+      o.on("--port N"){|port|
+        TicketMap.options[:port] = port
+      }
+      o.on("--version"){ puts VERSION; exit }
+      o.on("--help"){ puts o.to_s; exit }
+    }.parse!(ARGV)
+  end
 
-    SHAKE_INTERVAL = 24 unless defined?(SHAKE_INTERVAL) # hours
-    SHAKE_DISTANCE = 8 unless defined?(SHAKE_DISTANCE) # pixels
+  def self.load_conf(conf)
+    if File.exist?(conf)
+      Ramaze::Log.info("Loading config file: #{conf}")
+      require conf
+    else
+      Ramaze::Log.warn("Config file not found: #{conf}")
+    end
+  end
 
-    BOARD_WIDTH  = 600 unless defined?(BOARD_WIDTH) # pixels
-    BOARD_HEIGHT = 600 unless defined?(BOARD_HEIGHT) # pixels
+  def self.load_models(db)
+    Ramaze::Log.info("Loading database: #{db}")
+    require __DIR__('../model/ticket.rb')
+  end
+
+  def self.start(port)
+    Ramaze::Log.info("Starting server with port #{port}")
+    Ramaze.start :port => port,
+                 :root => __DIR__('../')
   end
 end
 
-# connect database
-$LOAD_PATH.unshift(File.expand_path("../", File.dirname(__FILE__)))
-require 'model/ticket'
+TicketMap.parse_argv!
 
-# controllers
-require 'controller/init.rb'
-
-Dir.chdir(File.expand_path("..", File.dirname(__FILE__)))
-Ramaze.start :port => Tickets::Config::PORT,
-             :root => Dir.pwd
+TicketMap.load_conf(TicketMap.options[:config])
+TicketMap.load_models(TicketMap.options[:db])
+TicketMap.start(TicketMap.options[:port])
