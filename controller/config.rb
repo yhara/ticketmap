@@ -2,6 +2,8 @@ class ConfigController < Controller
   map '/config'
 
   def board_size
-    "(xy . (#{Tickets::Config::BOARD_WIDTH} . #{Tickets::Config::BOARD_HEIGHT}))"
+    w = TicketMap.options[:board_width]
+    h = TicketMap.options[:board_height]
+    "(xy . (#{w} . #{h}))"
   end
 end
