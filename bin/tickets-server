@@ -51,7 +51,7 @@ module TicketMap
 
   def self.load_models(db)
     Ramaze::Log.info("Loading database: #{db}")
-    require __DIR__('../model/ticket.rb')
+    require __DIR__('../model/init.rb')
   end
 
   def self.start(port)

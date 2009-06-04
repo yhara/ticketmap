@@ -5,7 +5,7 @@ describe TicketsController do
   behaves_like :rack_test
 
   before do
-    Ticket.delete
+    Ticket.all.destroy!
   end
 
   # create

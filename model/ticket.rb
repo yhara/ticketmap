@@ -1,10 +1,27 @@
-require 'sequel'
-require 'sequel/extensions/migration'
-Sequel::Model.plugin(:schema) # for table_exists?
+class Ticket
+  include DataMapper::Resource
 
-$db = Sequel.sqlite(TicketMap.options[:db])
+  # properties
 
-class Ticket < Sequel::Model(:tickets)
+  property :id, Serial
+  property :importance, Integer 
+  property :emergency, Integer
+  property :title, String
+  property :deleted, Boolean
+  property :timeouted, Boolean
+
+  # validations
+
+  before :save do
+    self.importance ||= 0
+    self.emergency ||= 0
+    self.title ||= ""
+    self.deleted = false if self.deleted == nil
+    self.timeouted = false if self.timeouted == nil
+  end
+
+  # class methods
+  
   @@last_shook = Time.now
 
   def self.needs_shaking?
@@ -27,10 +44,4 @@ class Ticket < Sequel::Model(:tickets)
     end
     @@last_shook = Time.now
   end
-end
-
-unless Ticket.table_exists?
-  migration_dir = File.expand_path("../db/migrate/",
-                                   File.dirname(__FILE__))
-  Sequel::Migrator.apply($db, migration_dir)
 end
