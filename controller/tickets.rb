@@ -5,17 +5,17 @@ class TicketsController < Controller
     ticket = Ticket.new
     ticket.save
 
-    "(id . #{ticket.id})"
+    "(#t . (id . #{ticket.id}))"
   end
 
   def list
     tickets = Ticket.all(:deleted => false)
 
-    '(' +
+    '(#t . (' +
     tickets.map{|ticket|
       "(#{ticket.id} #{ticket.title.inspect} #{ticket.emergency} #{ticket.importance})"
     }.join(' ') +
-    ')'
+    '))'
   end
 
   def move
@@ -25,7 +25,7 @@ class TicketsController < Controller
 
     ticket.update_attributes(:emergency => request["x"],
                              :importance => request["y"])
-    "#t"
+    "(#t)"
   end
 
   def rename
@@ -34,7 +34,7 @@ class TicketsController < Controller
     raise "ticket not found" unless ticket
 
     ticket.update_attributes(:title => request["title"])
-    "#t"
+    "(#t)"
   end
 
   def delete
@@ -43,7 +43,7 @@ class TicketsController < Controller
     raise "ticket not found" unless ticket
 
     ticket.update_attributes(:deleted => true)
-    "#t"
+    "(#t)"
   end
 end
 
