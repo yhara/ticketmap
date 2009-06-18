@@ -15,6 +15,9 @@
             ("sound" . "Sound")))
 
 (load "scm/ticket.scm")
+(load "scm/board.scm")
+(load "scm/hand.scm")
+(load "scm/server.scm")
 
 ;; consts
 
@@ -35,7 +38,10 @@
 (define *width* #f)
 (define *height* #f)
 
-; load board size
+;; util
+(define show-error print)
+
+;; initialize
 (let1 result (read-from-string (http-request "config/board_size"))
   (if (eq? (car result) 'xy)
     (begin
@@ -51,15 +57,13 @@
 (set-position! ($ "left")   0       (/ *height* 2))
 (set-position! ($ "origin") (/ *width* 2) (/ *height* 2))
 
-(add-handler! ($ "origin") "click" ticket-create)
+(add-handler! ($ "origin") "click" board-on-origin-clicked)
 
-(add-handler! ($ "hand_title") "click" on-ticket-rename)
-(add-handler! ($ "hand_delete") "click" on-ticket-delete)
+(add-handler! ($ "hand_title") "click" hand-on-title-clicked)
+(add-handler! ($ "hand_delete") "click" hand-on-delete-clicked)
 
-(define show-error print)
-
-
-(for-each (lambda (vals) (apply ticket-new! vals))
-          (read-from-string (http-request "tickets/list")))
+(for-each (lambda (vals) 
+            (board-insert-ticket! (apply make-ticket vals)))
+          (server-ticket-list))
 
 (display "ok")
