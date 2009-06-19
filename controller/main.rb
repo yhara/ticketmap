@@ -6,6 +6,6 @@ class MainController < Controller
   end
 
   def track
-    @tickets = Ticket.filter(:deleted => true).reverse_order(:id)
+    @tickets = Ticket.all(:deleted => true, :order => [:id.desc])
   end
 end
