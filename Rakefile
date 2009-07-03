@@ -16,6 +16,7 @@ Jeweler::Tasks.new do |gemspec|
   gemspec.add_dependency('ramaze', '= 2009.05')
   gemspec.add_dependency('dm-core')
   gemspec.add_dependency('do_sqlite3')
+  gemspec.files.concat Dir["public/biwascheme/lib/*"]
 end
 
 desc "install current source as gem"
