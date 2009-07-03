@@ -24,6 +24,14 @@ task :dogfood => [:gemspec, :build] do
   sh "sudo gem install pkg/#{PROJECT_NAME}-#{File.read("VERSION").chomp}.gem"
 end
 
+desc "uninstall the installed gem"
+task :undogfood do
+  sh "sudo gem uninstall #{PROJECT_NAME}"
+end
+
+desc "uninstall, then install current source as gem"
+task :redogfood => [:undogfood, :dogfood]
+
 desc "uninstall temporary gem and install from github"
 task :nodogfood do
   sh "sudo gem uninstall #{PROJECT_NAME}"
