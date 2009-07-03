@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'ramaze'
+$LOAD_PATH.unshift __DIR__("../")
 require 'controller/init.rb'
 
 module TicketMap
