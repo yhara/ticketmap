@@ -6,7 +6,7 @@ require 'controller/init.rb'
 
 module TicketMap
   include Innate::Optioned
-  VERSION = "0.1.0.3rc"
+  VERSION = File.read(__DIR__("../VERSION"))
 
   options.dsl do
     o "Path of config file", 
