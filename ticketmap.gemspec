@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
      "spec/main.rb",
      "spec/models.rb",
      "spec/tickets.rb",
+     "ticketmap.gemspec",
      "tickets.gemspec",
      "view/index.xhtml",
      "view/track.xhtml"
