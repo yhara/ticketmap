@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ticketmap}
-  s.version = "0.3.0"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Yutaka HARA"]
@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
-
   s.files = [
     ".gitignore",
      ".gitmodules",
@@ -28,7 +27,6 @@ Gem::Specification.new do |s|
      "db/migrate/001_create_tickets.rb",
      "db/migrate/002_add_deleted_to_tickets.rb",
      "db/migrate/003_add_timeouted_to_tickets.rb",
-     "dot.tickets.conf.sample",
      "main.rb",
      "model/init.rb",
      "model/ticket.rb",
@@ -59,7 +57,6 @@ Gem::Specification.new do |s|
      "spec/models.rb",
      "spec/tickets.rb",
      "ticketmap.gemspec",
-     "tickets.gemspec",
      "view/index.xhtml",
      "view/track.xhtml"
   ]
