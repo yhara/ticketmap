@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
+
   s.files = [
     ".gitignore",
      ".gitmodules",
