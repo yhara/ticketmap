@@ -13,7 +13,7 @@ Jeweler::Tasks.new do |gemspec|
   gemspec.homepage = "http://github.com/yhara/#{PROJECT_NAME}"
   gemspec.description = gemspec.summary
   gemspec.authors = ["Yutaka HARA"]
-  gemspec.add_dependency('ramaze', '= 2009.05')
+  gemspec.add_dependency('ramaze', '= 2009.06.12')
   gemspec.add_dependency('dm-core')
   gemspec.add_dependency('do_sqlite3')
   gemspec.files.concat Dir["public/biwascheme/lib/*"]
